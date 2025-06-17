@@ -8,14 +8,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
-        /* Top animation */
-        .animate-pulse {
-            animation: pulse 3s infinite;
+        /* Top animation (one-time fade and slide up) */
+        .fade-slide-up {
+            animation: fadeSlideUp 1.5s ease-out forwards;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
+        @keyframes fadeSlideUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         /* Footer fade-in animation */
@@ -52,7 +51,7 @@
 </head>
 <body class="bg-gray-100 flex flex-col items-center min-h-screen p-2 sm:p-4">
     <!-- Top Animation -->
-    <div class="animate-pulse mb-4">
+    <div class="fade-slide-up mb-4">
         <h1 class="text-3xl sm:text-4xl font-bold text-blue-600 text-center">Body Composition Calculator</h1>
     </div>
 
@@ -81,7 +80,7 @@
     </div>
 
     <!-- User's Results Chart -->
-    <div class="w-full max-w-md mb-6">
+    <div id="resultsSection" class="w-full max-w-md mb-6">
         <h2 class="text-lg sm:text-xl font-bold mb-2 text-center">Your Body Composition</h2>
         <canvas id="resultsChart"></canvas>
     </div>
@@ -99,6 +98,12 @@
         <p id="bodyFatWHO" class="mb-2 text-sm sm:text-base"></p>
         <p id="visceralFatWHO" class="mb-2 text-sm sm:text-base"></p>
         <p id="skeletalMuscleWHO" class="mb-2 text-sm sm:text-base"></p>
+    </div>
+
+    <!-- Body Age Section -->
+    <div id="bodyAgeSection" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md hidden mb-6">
+        <h2 class="text-lg sm:text-xl font-bold mb-4">Your Body Age</h2>
+        <p id="bodyAge" class="text-sm sm:text-base"></p>
     </div>
 
     <!-- Footer -->
@@ -289,6 +294,52 @@
 
             // WHO Skeletal Muscle Recommendation
             document.getElementById('skeletalMuscleWHO').innerText = `Skeletal Muscle %: Your value is ${skeletalMuscle}%. WHO does not specify a range but recommends 150–300 minutes of moderate aerobic activity or 75–150 minutes of vigorous activity per week to maintain muscle mass and overall health.`;
+
+            // Calculate Body Age
+            let bodyAge = age; // Start with chronological age
+
+            // Adjust based on BMI
+            if (bmi < 18.5) {
+                bodyAge += 2; // Underweight: body may be functioning older
+            } else if (bmi > 24.9 && bmi <= 29.9) {
+                bodyAge += 3; // Overweight: add years
+            } else if (bmi > 29.9) {
+                bodyAge += 5; // Obese: add more years
+            } else {
+                bodyAge -= 1; // Healthy BMI: body may be younger
+            }
+
+            // Adjust based on Body Fat %
+            const [minBodyFat, maxBodyFat] = [bodyFatMin, bodyFatMax];
+            if (bodyFat < minBodyFat) {
+                bodyAge += 1; // Too low body fat can indicate health issues
+            } else if (bodyFat > maxBodyFat) {
+                const excessFat = bodyFat - maxBodyFat;
+                bodyAge += Math.floor(excessFat / 5); // Add 1 year for every 5% over the healthy max
+            } else {
+                bodyAge -= 1; // Healthy body fat: body may be younger
+            }
+
+            // Adjust based on Skeletal Muscle %
+            const [minSkeletalMuscle] = [skeletalMuscleMin];
+            if (skeletalMuscle < minSkeletalMuscle) {
+                const muscleDeficit = minSkeletalMuscle - skeletalMuscle;
+                bodyAge += Math.floor(muscleDeficit / 3); // Add 1 year for every 3% below the healthy min
+            } else {
+                bodyAge -= 1; // Healthy muscle mass: body may be younger
+            }
+
+            // Ensure bodyAge is not less than 10 (arbitrary minimum for realism)
+            bodyAge = Math.max(10, bodyAge);
+
+            // Display Body Age
+            const bodyAgeSectionDiv = document.getElementById('bodyAgeSection');
+            bodyAgeSectionDiv.classList.remove('hidden');
+            const ageComparison = bodyAge < age ? 'younger' : bodyAge > age ? 'older' : 'the same as';
+            document.getElementById('bodyAge').innerText = `Your Body Age is estimated to be ${bodyAge} years. Based on your metrics, your body is functioning ${ageComparison} your actual age of ${age} years.`;
+
+            // Auto-scroll to the results section
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
