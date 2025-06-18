@@ -26,6 +26,47 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
+        /* Glass effect popup */
+        .glass-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #fff;
+            text-align: center;
+            z-index: 1000;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .glass-popup.active {
+            display: block;
+        }
+
+        .glass-popup .icon {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        /* Fade out animation for popup */
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .glass-popup.fade-out {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
         /* Ensure charts are responsive */
         canvas {
             width: 100% !important;
@@ -111,12 +152,32 @@
         <p class="text-gray-600 text-center text-lg font-semibold">Made by SAGAR</p>
     </div>
 
+    <!-- Glass Effect Popup -->
+    <div id="installPopup" class="glass-popup">
+        <img src="icon.png" alt="App Icon" class="icon mx-auto">
+        <p class="text-sm">Install this app on your home screen for quick access!</p>
+        <p class="text-xs mt-2">Tap the share icon (or menu) and select "Add to Home Screen."</p>
+    </div>
+
     <script>
         let resultsChart;
         let healthyRangeChart;
 
         // Register the datalabels plugin
         Chart.register(ChartDataLabels);
+
+        // Mobile detection and popup initialization
+        window.addEventListener('load', () => {
+            const isMobile = window.innerWidth <= 640 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) {
+                const popup = document.getElementById('installPopup');
+                popup.classList.add('active');
+                setTimeout(() => {
+                    popup.classList.add('fade-out');
+                    setTimeout(() => popup.classList.remove('active', 'fade-out'), 500);
+                }, 3500); // Show for 3.5 seconds
+            }
+        });
 
         function calculate() {
             const height = parseFloat(document.getElementById('height').value) / 100; // Convert cm to m
