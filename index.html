@@ -35,12 +35,24 @@
             padding: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.18);
-            color: #fff;
+            color: #333; /* Darker text for contrast on light background */
+        }
+
+        /* Wavy animation for calculate button */
+        .wavy {
+            animation: wave 0.5s ease-in-out;
+        }
+        @keyframes wave {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(2deg); }
+            50% { transform: scale(1) rotate(-2deg); }
+            75% { transform: scale(1.1) rotate(2deg); }
+            100% { transform: scale(1) rotate(0deg); }
         }
 
         /* Ensure charts are responsive */
         canvas {
-            width: 100% !important;
+            width: 100 !important;
             height: auto !important;
         }
 
@@ -61,31 +73,32 @@
         }
     </style>
 </head>
-<body class="bg-gray-800 flex flex-col items-center min-h-screen p-2 sm:p-4 text-white">
+<body class="bg-gray-100 flex flex-col items-center min-h-screen p-2 sm:p-4">
     <!-- Top Animation -->
     <div class="fade-slide-up mb-4">
-        <h1 class="text-3xl sm:text-4xl font-bold text-blue-300 text-center">Body Composition Calculator</h1>
+        <h1 class="text-3xl sm:text-4xl font-bold text-blue-600 text-center">Body Composition Calculator</h1>
     </div>
 
     <!-- Input Form -->
     <div class="glass-section w-full max-w-md mb-6">
         <div class="mb-4">
-            <label class="block text-gray-200 text-sm sm:text-base">Height (cm):</label>
-            <input id="height" type="number" class="w-full p-3 border rounded bg-gray-700 border-gray-600 text-white text-sm sm:text-base" placeholder="Enter height in cm">
+            <label class="block text-gray-700 text-sm sm:text-base">Height (cm):</label>
+            <input id="height" type="number" class="w-full p-3 border rounded bg-white border-gray-300 text-black text-sm sm:text-base" placeholder="Enter height in cm">
         </div>
         <div class="mb-4">
-            <label class="block text-gray-200 text-sm sm:text-base">Weight (kg):</label>
-            <input id="weight" type="number" class="w-full p-3 border rounded bg-gray-700 border-gray-600 text-white text-sm sm:text-base" placeholder="Enter weight in kg">
+            <label class="block text-gray-700 text-sm sm:text-base">Weight (kg):</label>
+            <input id="weight" type="number" class="w-full p-3 border rounded bg-white border-gray-300 text-black text-sm sm:text-base" placeholder="Enter weight in kg">
         </div>
         <div class="mb-4">
-            <label class="block text-gray-200 text-sm sm:text-base">Age:</label>
-            <input id="age" type="number" class="w-full p-3 border rounded bg-gray-700 border-gray-600 text-white text-sm sm:text-base" placeholder="Enter age">
+            <label class="block text-gray-700 text-sm sm:text-base">Age:</label>
+            <input id="age" type="number" class="w-full p-3 border rounded bg-white border-gray-300 text-black text-sm sm:text-base" placeholder="Enter age">
         </div>
         <div class="mb-4">
-            <label class="block text-gray-200 text-sm sm:text-base">Gender:</label>
-            <select id="gender" class="w-full p-3 border rounded bg-gray-700 border-gray-600 text-white text-sm sm:text-base">
-                <option value="male" class="text-gray-400">Male</option>
-                <option value="female" class="text-gray-400">Female</option>
+            <label class="block text-gray-700 text-sm sm:text-base">Gender:</label>
+            <select id="gender" class="w-full p-3 border rounded bg-white border-gray-300 text-gray-700 text-sm sm:text-base">
+                <option value="" disabled selected>Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
             </select>
         </div>
         <button onclick="calculate()" class="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600 text-sm sm:text-base">Calculate</button>
@@ -93,34 +106,34 @@
 
     <!-- User's Results Chart -->
     <div id="resultsSection" class="glass-section w-full max-w-md mb-6">
-        <h2 class="text-lg sm:text-xl font-bold mb-2 text-center text-blue-300">Your Body Composition</h2>
+        <h2 class="text-lg sm:text-xl font-bold mb-2 text-center text-blue-600">Your Body Composition</h2>
         <canvas id="resultsChart"></canvas>
     </div>
 
     <!-- Healthy Range Comparison Chart -->
     <div class="glass-section w-full max-w-md mb-6">
-        <h2 class="text-lg sm:text-xl font-bold mb-2 text-center text-blue-300">Healthy Ranges for Your Age</h2>
+        <h2 class="text-lg sm:text-xl font-bold mb-2 text-center text-blue-600">Healthy Ranges for Your Age</h2>
         <canvas id="healthyRangeChart"></canvas>
     </div>
 
     <!-- WHO Recommendations Section -->
     <div id="whoRecommendations" class="glass-section w-full max-w-md hidden mb-6">
-        <h2 class="text-lg sm:text-xl font-bold mb-4 text-center text-blue-300">WHO Recommendations for Your Age</h2>
-        <p id="bmiWHO" class="mb-2 text-sm sm:text-base"></p>
-        <p id="bodyFatWHO" class="mb-2 text-sm sm:text-base"></p>
-        <p id="visceralFatWHO" class="mb-2 text-sm sm:text-base"></p>
-        <p id="skeletalMuscleWHO" class="mb-2 text-sm sm:text-base"></p>
+        <h2 class="text-lg sm:text-xl font-bold mb-4 text-center text-blue-600">WHO Recommendations for Your Age</h2>
+        <p id="bmiWHO" class="mb-2 text-sm sm:text-base text-gray-700"></p>
+        <p id="bodyFatWHO" class="mb-2 text-sm sm:text-base text-gray-700"></p>
+        <p id="visceralFatWHO" class="mb-2 text-sm sm:text-base text-gray-700"></p>
+        <p id="skeletalMuscleWHO" class="mb-2 text-sm sm:text-base text-gray-700"></p>
     </div>
 
     <!-- Body Age Section -->
     <div id="bodyAgeSection" class="glass-section w-full max-w-md hidden mb-6">
-        <h2 class="text-lg sm:text-xl font-bold mb-4 text-center text-blue-300">Your Body Age</h2>
-        <p id="bodyAge" class="text-sm sm:text-base"></p>
+        <h2 class="text-lg sm:text-xl font-bold mb-4 text-center text-blue-600">Your Body Age</h2>
+        <p id="bodyAge" class="text-sm sm:text-base text-gray-700"></p>
     </div>
 
     <!-- Footer -->
     <div class="fade-in mt-auto mb-4">
-        <p class="text-gray-300 text-center text-lg font-semibold">Made by SAGAR</p>
+        <p class="text-gray-600 text-center text-lg font-semibold">Made by SAGAR</p>
     </div>
 
     <script>
@@ -131,13 +144,21 @@
         Chart.register(ChartDataLabels);
 
         function calculate() {
+            const button = document.querySelector('button');
+            button.classList.add('wavy'); // Add wavy animation on click
+
             const height = parseFloat(document.getElementById('height').value) / 100; // Convert cm to m
             const weight = parseFloat(document.getElementById('weight').value);
             const age = parseInt(document.getElementById('age').value);
-            const gender = document.getElementById('gender').value;
+            const genderSelect = document.getElementById('gender');
+            const gender = genderSelect.value; // Ensure the selected value is captured
 
-            if (!height || !weight || !age) {
-                alert('Please fill in all fields.');
+            // Debug: Log the selected gender to verify
+            console.log('Selected Gender:', gender);
+
+            if (!height || !weight || !age || !gender) {
+                alert('Please fill in all fields, including gender.');
+                button.classList.remove('wavy'); // Remove animation if invalid
                 return;
             }
 
@@ -148,7 +169,7 @@
             let bodyFat;
             if (gender === 'male') {
                 bodyFat = (1.20 * bmi) + (0.23 * age) - 16.2;
-            } else {
+            } else if (gender === 'female') {
                 bodyFat = (1.20 * bmi) + (0.23 * age) - 5.4;
             }
             bodyFat = Math.max(0, bodyFat.toFixed(1));
@@ -179,16 +200,16 @@
                         y: {
                             beginAtZero: true,
                             max: 50,
-                            ticks: { color: '#fff' } // White ticks for contrast
+                            ticks: { color: '#333' } // Darker ticks for contrast
                         },
-                        x: { ticks: { color: '#fff' } } // White labels for contrast
+                        x: { ticks: { color: '#333' } } // Darker labels for contrast
                     },
                     plugins: {
                         legend: { display: false },
                         datalabels: {
                             anchor: 'end',
                             align: 'top',
-                            color: '#fff', // White data labels for contrast
+                            color: '#333', // Darker data labels for contrast
                             font: {
                                 weight: 'bold',
                                 size: window.innerWidth <= 640 ? 10 : 12 // Smaller font on mobile
@@ -210,7 +231,7 @@
                 if (age <= 39) { bodyFatMin = 8; bodyFatMax = 19; }
                 else if (age <= 59) { bodyFatMin = 11; bodyFatMax = 22; }
                 else { bodyFatMin = 13; bodyFatMax = 25; }
-            } else {
+            } else if (gender === 'female') {
                 if (age <= 39) { bodyFatMin = 21; bodyFatMax = 33; }
                 else if (age <= 59) { bodyFatMin = 23; bodyFatMax = 35; }
                 else { bodyFatMin = 24; bodyFatMax = 36; }
@@ -257,15 +278,15 @@
                         y: {
                             beginAtZero: true,
                             max: 50,
-                            ticks: { color: '#fff' } // White ticks for contrast
+                            ticks: { color: '#333' } // Darker ticks for contrast
                         },
-                        x: { ticks: { color: '#fff' } } // White labels for contrast
+                        x: { ticks: { color: '#333' } } // Darker labels for contrast
                     },
                     plugins: {
                         legend: {
                             display: true,
                             labels: {
-                                color: '#fff', // White legend text for contrast
+                                color: '#333', // Darker legend text for contrast
                                 font: {
                                     size: window.innerWidth <= 640 ? 10 : 12 // Smaller legend on mobile
                                 }
@@ -274,7 +295,7 @@
                         datalabels: {
                             anchor: 'end',
                             align: 'top',
-                            color: '#fff', // White data labels for contrast
+                            color: '#333', // Darker data labels for contrast
                             font: {
                                 weight: 'bold',
                                 size: window.innerWidth <= 640 ? 10 : 12 // Smaller font on mobile
@@ -298,7 +319,7 @@
             if (gender === 'male') {
                 if (age <= 45) { bodyFatWHORange = '8–20%'; bodyFatWHOMax = 25; }
                 else { bodyFatWHORange = '13–25%'; bodyFatWHOMax = 28; }
-            } else {
+            } else if (gender === 'female') {
                 if (age <= 45) { bodyFatWHORange = '21–33%'; bodyFatWHOMax = 35; }
                 else { bodyFatWHORange = '24–36%'; bodyFatWHOMax = 40; }
             }
@@ -357,6 +378,9 @@
 
             // Auto-scroll to the results section
             document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+
+            // Remove wavy animation after calculation
+            setTimeout(() => button.classList.remove('wavy'), 500);
         }
     </script>
 </body>
