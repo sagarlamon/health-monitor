@@ -1,12 +1,12 @@
-# Health Monitor 🩺
+# Health Card 🩺
 
 A clean, responsive **health monitoring dashboard UI** built using **HTML, Tailwind CSS, and vanilla JavaScript**.  
 This project simulates a personal health tracker interface that visually presents key health metrics in a simple and user-friendly way.
 
 ⚠️ This is **not real diagnostic tool. It is a **front-end prototype** focused on UI/UX, layout, and data presentation.
 
-🔗 **Source Code:**  
-https://github.com/sagarlamon/health-monitor
+🔗 **Demo:**  
+https://sagarlamon.github.io/health-card/
 
 ---
 
