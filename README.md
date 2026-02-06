@@ -3,7 +3,7 @@
 A clean, responsive **health monitoring dashboard UI** built using **HTML, Tailwind CSS, and vanilla JavaScript**.  
 This project simulates a personal health tracker interface that visually presents key health metrics in a simple and user-friendly way.
 
-⚠️ This is **not a medical device** or real diagnostic tool. It is a **front-end prototype** focused on UI/UX, layout, and data presentation.
+⚠️ This is **not real diagnostic tool. It is a **front-end prototype** focused on UI/UX, layout, and data presentation.
 
 🔗 **Source Code:**  
 https://github.com/sagarlamon/health-monitor
@@ -23,14 +23,6 @@ All values are **static or simulated**, making this project ideal for:
 ---
 
 ## Features
-
-### Health Metrics Display
-The dashboard visually represents common health indicators such as:
-- Heart rate
-- Body temperature
-- Blood pressure
-- Oxygen level (SpO₂)
-- Step/activity indicators *(if present in UI)*
 
 These values are shown in a **card-based layout** for easy scanning.
 
